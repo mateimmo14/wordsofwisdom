@@ -1,0 +1,146 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Words of Wisdom</title>
+    <style>
+        body {
+            background-color: #121212;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding: 40px;
+            color: #eee;
+        }
+        #header {
+            font-size: 3em;
+            font-weight: 700;
+            margin-bottom: 20px;
+            color: #fafafa;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            text-align: center;
+        }
+        .input-section {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 25px;
+        }
+        .input-section input {
+            width: 200px;
+            padding: 10px 12px;
+            border-radius: 8px;
+            border: 1px solid #333;
+            background: #1e1e1e;
+            color: #eee;
+            font-size: 1em;
+        }
+        .input-section input:focus {
+            outline: none;
+            border-color: #2ea44f;
+        }
+        .submit-btn {
+            background-color: #2ea44f;
+            border: 1px solid rgba(27,31,35,.15);
+            border-radius: 8px;
+            color: white;
+            padding: 10px 16px;
+            font-size: 1em;
+            font-weight: 600;
+            cursor: pointer;
+            transition: background-color 0.2s, transform 0.1s;
+        }
+        .submit-btn:hover {
+            background-color: #2c974b;
+        }
+        .submit-btn:active {
+            transform: scale(0.96);
+        }
+        .wisdom-square {
+            width: 450px;
+            max-height: 350px;
+            background-color: #1e1e1e;
+            border-radius: 15px;
+            padding: 20px;
+            box-shadow: 0 8px 20px rgba(0,0,0,0.6);
+            overflow-y: auto;
+            border: 1px solid #333;
+            transition: transform 0.2s, background-color 0.2s;
+        }
+        .wisdom-square:hover {
+            transform: translateY(-3px);
+            background-color: #2a2a2a;
+        }
+        .wisdom-square i {
+            display: block;
+            margin-bottom: 5px;
+            font-size: 1.15em;
+            line-height: 1.4;
+            color: #ddd;
+        }
+        .wisdom-author {
+            color: #aaa;
+            font-size: 0.95em;
+            margin-bottom: 10px;
+        }
+    </style>
+</head>
+<body>
+
+<h1 id="header">Words of Wisdom</h1>
+
+<div class="input-section">
+    <input id="wisdomInput" type="text" placeholder="Share your wisdom..." required>
+    <input id="authorInput" type="text" placeholder="Your name...">
+    <button class="submit-btn" onclick="submitWisdom()"
+    >Submit</button>
+</div>
+
+<div class="wisdom-square" id="wisdomBox">
+    {{range .}}
+    <i><b>"{{.Data}}"</b></i>
+    <i class="wisdom-author">- {{.From}}</i>
+    <hr>
+    {{end}}
+</div>
+
+<script>
+    async function submitWisdom() {
+        const wisdomInput = document.getElementById("wisdomInput");
+        const authorInput = document.getElementById("authorInput");
+
+        const wisdom = wisdomInput.value.trim();
+        let author = authorInput.value.trim();
+
+        if (!wisdom) return; // don't allow empty wisdom
+        if (!author) author = "Anonymous"; // default if author empty
+
+        await fetch("/", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ wisdom, author })
+        });
+
+        const box = document.getElementById("wisdomBox");
+
+        const wisdomElem = document.createElement("i");
+        wisdomElem.innerHTML = `<b>"${wisdom}"</b>`;
+
+        const authorElem = document.createElement("i");
+        authorElem.classList.add("wisdom-author");
+        authorElem.textContent = `- ${author}`;
+
+        const hr = document.createElement("hr");
+
+        box.prepend(hr);
+        box.prepend(authorElem);
+        box.prepend(wisdomElem);
+
+        wisdomInput.value = "";
+        authorInput.value = "";
+    }
+</script>
+
+</body>
+</html>
