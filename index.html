@@ -4,6 +4,22 @@
     <meta charset="UTF-8">
     <title>Words of Wisdom</title>
     <style>
+        .input-section textarea {
+            width: 200px;
+            padding: 10px 12px;
+            border-radius: 8px;
+            border: 1px solid #333;
+            background: #1e1e1e;
+            color: #eee;
+            font-size: 1em;
+            resize: none;
+            height: 40px;
+            font-family: inherit;
+        }
+        .input-section textarea:focus {
+            outline: none;
+            border-color: #2ea44f;
+        }
         body {
             background-color: #121212;
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
@@ -92,12 +108,12 @@
 <h1 id="header">Words of Wisdom</h1>
 
 <div class="input-section">
-    <input id="wisdomInput" type="text" placeholder="Share your wisdom..." required>
+    <textarea id="wisdomInput" type="text" placeholder="Share your wisdom..." required></textarea>
     <input id="authorInput" type="text" placeholder="Your name...">
     <button class="submit-btn" onclick="submitWisdom()"
     >Submit</button>
 </div>
-<h6>The wisdom should be a short quote, leave the name empty for the quote to be Anonymous, for more information click <a href="https://www.youtube.com/watch?v=dQw4w9WgXcQ&list=RDdQw4w9WgXcQ&start_radio=1">here</a></h6>
+<h6>The wisdom should be a short quote, leave the name empty for the quote to be Anonymous, for more information click <a href="https://www.youtube.com/watch?v=dQw4w9WgXcQ&list=RDdQw4w9WgXcQ&start_radio=1">here</a>, for newlines in the wisdom just press Enter or type "\n".</h6>
 
 <div class="wisdom-square" id="wisdomBox">
     {{range .}}
@@ -128,7 +144,7 @@
         const box = document.getElementById("wisdomBox");
 
         const wisdomElem = document.createElement("i");
-        wisdomElem.innerHTML = `<b>"${wisdom}"</b>`;
+        wisdomElem.innerHTML = `<b>"${wisdom.replace(/\n|\\n/g, '<br>')}"</b>`;
 
         const authorElem = document.createElement("i");
         authorElem.classList.add("wisdom-author");

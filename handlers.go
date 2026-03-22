@@ -10,6 +10,7 @@ import (
 	"log"
 	"net/http"
 	"os"
+	"strings"
 )
 
 type WisdomResponse struct {
@@ -21,7 +22,7 @@ var connStr = os.Getenv("DATABASE_URL")
 
 type Wisdom struct {
 	Id   int
-	Data string
+	Data template.HTML
 	From string
 }
 
@@ -40,13 +41,17 @@ func handleRoot(w http.ResponseWriter, _ *http.Request) {
 		log.Println(err)
 		os.Exit(1)
 	}
+	var dataString string
 	for rows.Next() {
 		var w Wisdom
-		err = rows.Scan(&w.Id, &w.Data, &w.From)
+		dataString = string(w.Data)
+		err = rows.Scan(&w.Id, &dataString, &w.From)
+		w.Data = template.HTML(dataString)
 		if err != nil {
 			log.Println(err)
 			os.Exit(1)
 		}
+
 		Wisdoms = append(Wisdoms, w)
 	}
 	err = tmpl.Execute(w, Wisdoms)
@@ -60,14 +65,18 @@ func handleSubmit(w http.ResponseWriter, r *http.Request) {
 	queries := database.New(db)
 	var resp WisdomResponse
 	x, _ := io.ReadAll(r.Body)
+	log.Println(string(x))
 	err := json.Unmarshal(x, &resp)
 	if err != nil {
 		log.Println(err)
 		w.WriteHeader(400)
 		return
 	}
+	replacedString := strings.ReplaceAll(resp.Wisdom, "\\n", "<br>")
+	replacedString = strings.ReplaceAll(replacedString, "\n", "<br>")
+
 	final := sql.NullString{
-		String: resp.Wisdom,
+		String: replacedString,
 		Valid:  true,
 	}
 	finalfinal := database.AddWisdomParams{
