@@ -5,6 +5,7 @@ import (
 	"encoding/json"
 	_ "github.com/lib/pq"
 	"github.com/mateimmo14/wordsofwisdom/internal/database"
+	"html"
 	"html/template"
 	"io"
 	"log"
@@ -74,7 +75,9 @@ func handleSubmit(w http.ResponseWriter, r *http.Request) {
 	}
 	replacedString := strings.ReplaceAll(resp.Wisdom, "\\n", "<br>")
 	replacedString = strings.ReplaceAll(replacedString, "\n", "<br>")
-
+	replacedString = strings.ReplaceAll(replacedString, "<br>", "__BR__")
+	replacedString = html.EscapeString(replacedString)
+	replacedString = strings.ReplaceAll(replacedString, "__BR__", "<br>")
 	final := sql.NullString{
 		String: replacedString,
 		Valid:  true,
@@ -83,9 +86,27 @@ func handleSubmit(w http.ResponseWriter, r *http.Request) {
 		Data:   final,
 		Author: resp.From,
 	}
+	toResp := struct {
+		Wisdom string `json:"wisdom"`
+	}{Wisdom: replacedString}
+	finalResponse, err := json.Marshal(toResp)
+	if err != nil {
+		log.Println(err)
+		w.WriteHeader(400)
+		return
+	}
 	_, err = queries.AddWisdom(r.Context(), finalfinal)
 	if err != nil {
 		log.Println(err)
 		w.WriteHeader(400)
+
+	}
+	w.WriteHeader(200)
+	_, err = w.Write(finalResponse)
+
+	if err != nil {
+		log.Println(err)
+		return
+
 	}
 }

@@ -129,22 +129,27 @@
         const wisdomInput = document.getElementById("wisdomInput");
         const authorInput = document.getElementById("authorInput");
 
-        const wisdom = wisdomInput.value.trim();
+        let wisdom = wisdomInput.value.trim();
         let author = authorInput.value.trim();
 
         if (!wisdom) return; // don't allow empty wisdom
         if (!author) author = "Anonymous"; // default if author empty
 
-        await fetch("/", {
+
+        const res = await fetch("/", {
             method: "POST",
             headers: { "Content-Type": "application/json" },
             body: JSON.stringify({ wisdom, author })
         });
+        const data = await res.json();
+        console.log(data);
+
 
         const box = document.getElementById("wisdomBox");
 
         const wisdomElem = document.createElement("i");
-        wisdomElem.innerHTML = `<b>"${wisdom.replace(/\n|\\n/g, '<br>')}"</b>`;
+        wisdomElem.innerHTML = `<b>"${data.wisdom}"</b>`;
+
 
         const authorElem = document.createElement("i");
         authorElem.classList.add("wisdom-author");
