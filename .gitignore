@@ -1,14 +1,2 @@
-# Ignore the wordsofwisdom binary
 wordsofwisdom
-
-# Ignore IDE directories
-.vscode/
-.idea/
-
-# Ignore build artifacts
-/build/
-/dist/
-*.o
-*.exe
-*.out
-*.class
+.idea
