@@ -5,15 +5,12 @@ A simple quote-sharing app built with Go and PostgreSQL.
 ## Setup
 
 1. **Database**
-   ```sql
-   CREATE DATABASE words_of_wisdom;
-   CREATE TABLE wisdoms (
-       id SERIAL PRIMARY KEY,
-       data TEXT NOT NULL,
-       author VARCHAR(255) DEFAULT 'Anonymous',
-       created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
-   );
+   
+   Migration scripts are located in `sql/schemes/`. To set up the database, run:
+   ```bash
+   goose up
    ```
+   This will create the necessary database and tables.
 
 2. **Environment**
    ```bash
@@ -42,3 +39,4 @@ A simple quote-sharing app built with Go and PostgreSQL.
 - Go 1.21+
 - PostgreSQL
 - sqlc for database code generation.
+- Goose for database migrations
