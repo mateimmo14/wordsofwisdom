@@ -1,33 +1,44 @@
-# Words of Wisdom Project Documentation
+# Words of Wisdom
 
-## Project Setup
-To set up the project, follow these steps:
-1. **Clone the Repository**  
-   Use `git clone https://github.com/mateimmo14/wordsofwisdom.git` to clone the project to your local machine.
+A simple quote-sharing app built with Go and PostgreSQL.
 
-2. **Install Dependencies**  
-   Navigate to the project directory and run `npm install` to install the necessary dependencies.
+## Setup
 
-3. **Environment Variables**  
-   Create a `.env` file in the root of the project and add the required environment variables.
-   Refer to the `.env.example` for the list of environment variables needed.
+1. **Database**
+   ```sql
+   CREATE DATABASE words_of_wisdom;
+   CREATE TABLE wisdoms (
+       id SERIAL PRIMARY KEY,
+       data TEXT NOT NULL,
+       author VARCHAR(255) DEFAULT 'Anonymous',
+       created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+   );
+   ```
 
-## Architecture
-The project follows a modular architecture:
-- **src/**: Contains the main source code.
-- **tests/**: Contains the unit and integration tests.
-- **public/**: Contains static assets like images and styles.
+2. **Environment**
+   ```bash
+   export DATABASE_URL="postgres://user:password@localhost:5432/words_of_wisdom"
+   ```
 
-## Environment Variables
-The following environment variables are required for the application:
-- `DB_CONNECTION`: The database connection string.
-- `PORT`: The port on which the application will run.
-- `SECRET_KEY`: The secret key for JWT authentication.
+3. **Run**
+   ```bash
+   go run main.go handlers.go
+   ```
+   Server runs on `http://localhost:8080`
 
-## Usage Instructions
-1. Run the application using `npm start`.
-2. Access the application at `http://localhost:${process.env.PORT}`.
-3. Follow the API documentation for endpoints and usage instructions.  
+## API
 
-## Contributing
-If you want to contribute to this project, feel free to open an issue or submit a pull request. Your contributions are welcome!
+**GET /** - View quotes  
+**POST /** - Submit quote
+```json
+{
+  "wisdom": "Your quote here",
+  "author": "Your name"
+}
+```
+
+## Stack
+
+- Go 1.21+
+- PostgreSQL
+- sqlc for database code generation.
