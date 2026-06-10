@@ -20,7 +20,7 @@ jobs:
       - name: Build image
         run: gcloud builds submit --tag europe-north1-docker.pkg.dev/wordsofwisdom-499017/wordsofwisdom/wordsofwisdom:latest --service-account=projects/wordsofwisdom-499017/serviceAccounts/service-account@wordsofwisdom-499017.iam.gserviceaccount.com --default-buckets-behavior=REGIONAL_USER_OWNED_BUCKET .
       - name: Deploy
-        run: gcloud run deploy wordsofwisdom --image-url europe-north1-docker.pkg.dev/wordsofwisdom-499017/wordsofwisdom/wordsofwisdom:latest --region europe-north1 --allow-unauthenticated  --port 8080
+        run: gcloud run deploy wordsofwisdom --image europe-north1-docker.pkg.dev/wordsofwisdom-499017/wordsofwisdom/wordsofwisdom:latest --region europe-north1 --allow-unauthenticated  --port 8080
 
 
 
