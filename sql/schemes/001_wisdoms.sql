@@ -1,6 +1,6 @@
 -- +goose Up
 create table wisdoms (
-    id integer generated always as identity,
+    id integer primary key,
     data text,
     author text not null
 );

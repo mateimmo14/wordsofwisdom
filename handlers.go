@@ -3,8 +3,6 @@ package main
 import (
 	"database/sql"
 	"encoding/json"
-	_ "github.com/lib/pq"
-	"github.com/mateimmo14/wordsofwisdom/internal/database"
 	"html"
 	"html/template"
 	"io"
@@ -12,6 +10,9 @@ import (
 	"net/http"
 	"os"
 	"strings"
+
+	"github.com/mateimmo14/wordsofwisdom/internal/database"
+	_ "modernc.org/sqlite"
 )
 
 type WisdomResponse struct {
@@ -19,15 +20,13 @@ type WisdomResponse struct {
 	From   string `json:"author"`
 }
 
-var connStr = os.Getenv("DATABASE_URL")
-
 type Wisdom struct {
 	Id   int
 	Data template.HTML
 	From string
 }
 
-var db, err = sql.Open("postgres", connStr)
+var db, err = sql.Open("sqlite", "./db.db")
 
 func handleRoot(w http.ResponseWriter, _ *http.Request) {
 	var Wisdoms []Wisdom

@@ -1,0 +1,6 @@
+FROM golang:1.26
+COPY . /app/
+WORKDIR /app/
+RUN go build .
+
+CMD ["./wordsofwisdom"]
