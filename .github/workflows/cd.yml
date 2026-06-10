@@ -18,9 +18,9 @@ jobs:
       - name: Gcloud setup
         uses: google-github-actions/setup-gcloud@v3
       - name: Build image
-        run: gcloud builds submit --tag europe-north1-docker.pkg.dev/wordsofwisdom-499017/wordsofwisdom/wordsofwisdom:latest .
+        run: gcloud builds submit --tag europe-north1-docker.pkg.dev/wordsofwisdom-499017/wordsofwisdom/wordsofwisdom:latest --service-account=service-account@wordsofwisdom-499017.iam.gserviceaccount.com .
       - name: Deploy
-        run: gcloud run deploy wordsofwisdom --image-url europe-north1-docker.pkg.dev/wordsofwisdom-499017/wordsofwisdom/wordsofwisdom:latest --region europe-north1 --allow-unauthenticated --service-account=service-account@wordsofwisdom-499017.iam.gserviceaccount.com --port 8080
+        run: gcloud run deploy wordsofwisdom --image-url europe-north1-docker.pkg.dev/wordsofwisdom-499017/wordsofwisdom/wordsofwisdom:latest --region europe-north1 --allow-unauthenticated  --port 8080
 
 
 
